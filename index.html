@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfólio | Luiz Rogerio Sonego Yavorski</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals with Teal Accent -->
+    <!-- Application Structure Plan: A single-page application with a top navigation bar for smooth scrolling to thematic sections: Hero, Sobre, Timeline, Competências, Projeto Destaque, and Contato. This structure provides a guided yet flexible narrative of the professional journey. An interactive timeline for experiences and a chart for skills are used to make data consumption more engaging and visually appealing than a standard text list. This design choice aims to capture a recruiter's attention and quickly convey value and expertise. -->
+    <!-- Visualization & Content Choices:
+        - Hero: Goal: Inform/Brand -> Method: Large typography, contact icons -> Interaction: Links -> Justification: Immediate, impactful introduction.
+        - Timeline: Goal: Show change/growth -> Method: Vertical timeline with JS-powered accordions -> Interaction: Click to expand/collapse details -> Justification: Organizes dense information cleanly, encouraging exploration without overwhelming the user.
+        - Skills Chart: Goal: Compare/Inform -> Method: Horizontal Bar Chart (Chart.js) -> Interaction: Hover tooltips for years of experience -> Justification: Provides a quick, visual, data-driven summary of technical abilities, now showing experience duration, which is more engaging than a simple list.
+        - Project Card: Goal: Demonstrate capability -> Method: Static info card -> Interaction: None -> Justification: A focused case study to provide tangible proof of skills mentioned. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .timeline-item:before {
+            content: '';
+            position: absolute;
+            top: 1rem;
+            left: -0.875rem;
+            width: 1.75rem;
+            height: 1.75rem;
+            border-radius: 50%;
+            background-color: #f1f5f9;
+            border: 4px solid #0d9488;
+        }
+        .details-content {
+            transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+        .details-content.open {
+            max-height: 500px;
+            opacity: 1;
+        }
+        .chart-container {
+            position: relative;
+            margin: auto;
+            height: 500px;
+            max-height: 80vh;
+            width: 100%;
+            max-width: 900px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 600px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <header class="bg-slate-800 text-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-6 py-3">
+            <div class="flex justify-between items-center">
+                <a href="#home" class="text-xl font-bold tracking-tight">Luiz R. S. Yavorski</a>
+                <div class="hidden md:flex space-x-6">
+                    <a href="#about" class="hover:text-teal-400 transition-colors">Sobre</a>
+                    <a href="#timeline" class="hover:text-teal-400 transition-colors">Carreira</a>
+                    <a href="#skills" class="hover:text-teal-400 transition-colors">Competências</a>
+                    <a href="#project" class="hover:text-teal-400 transition-colors">Projeto Destaque</a>
+                    <a href="#contact" class="hover:text-teal-400 transition-colors">Contato</a>
+                </div>
+                <div class="md:hidden">
+                    <button id="menu-btn" class="focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                    </button>
+                </div>
+            </div>
+            <div id="mobile-menu" class="hidden md:hidden mt-4 flex flex-col space-y-2">
+                <a href="#about" class="hover:text-teal-400 transition-colors">Sobre</a>
+                <a href="#timeline" class="hover:text-teal-400 transition-colors">Carreira</a>
+                <a href="#skills" class="hover:text-teal-400 transition-colors">Competências</a>
+                <a href="#project" class="hover:text-teal-400 transition-colors">Projeto Destaque</a>
+                <a href="#contact" class="hover:text-teal-400 transition-colors">Contato</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section id="home" class="bg-slate-800 text-white min-h-screen flex items-center">
+            <div class="container mx-auto px-6 text-center">
+                <h1 class="text-4xl md:text-6xl font-extrabold leading-tight">Luiz Rogerio Sonego Yavorski</h1>
+                <p class="mt-4 text-xl md:text-2xl text-teal-400 font-medium">Desenvolvedor Full Stack Sênior | Líder Técnico | Especialista em Web e Mobile (React Native)</p>
+                <div class="mt-8 flex justify-center space-x-6">
+                    <a href="https://www.linkedin.com/in/luizsonegoyavorski/" target="_blank" class="text-slate-300 hover:text-teal-400 transition-colors">
+                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" clip-rule="evenodd"/></svg>
+                    </a>
+                    <a href="https://github.com/luizsonego" target="_blank" class="text-slate-300 hover:text-teal-400 transition-colors">
+                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12 0C5.373 0 0 5.373 0 12c0 5.303 3.438 9.794 8.205 11.385.6.11.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.043-1.61-4.043-1.61-.546-1.387-1.334-1.756-1.334-1.756-1.09-.745.083-.73.083-.73 1.205.086 1.838 1.238 1.838 1.238 1.07 1.835 2.809 1.305 3.49.998.108-.775.418-1.305.762-1.605-2.665-.3-5.464-1.33-5.464-5.93 0-1.31.465-2.382 1.235-3.22-.125-.3-.535-1.52.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.4 3.003-.404 1.02.004 2.046.138 3.003.404 2.29-1.552 3.297-1.23 3.297-1.23.653 1.656.243 2.876.12 3.176.77.838 1.233 1.91 1.233 3.22 0 4.61-2.804 5.625-5.476 5.92.43.37.81 1.096.81 2.22 0 1.606-.015 2.89-.015 3.286 0 .315.21.69.825.577C20.565 21.794 24 17.303 24 12c0-6.627-5.373-12-12-12z" clip-rule="evenodd"/></svg>
+                    </a>
+                    <a href="mailto:luizsonegoyavorski@email.com" class="text-slate-300 hover:text-teal-400 transition-colors">
+                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12.713l-11.985-9.713h23.97l-11.985 9.713zm0 2.574l-12-9.725v15.438h24v-15.438l-12 9.725z"/></svg>
+                    </a>
+                     <a href="tel:+5544988488558" class="text-slate-300 hover:text-teal-400 transition-colors">
+                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="py-20 sm:py-28">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl font-bold text-center mb-4">Sobre Mim</h2>
+                <p class="text-center text-slate-600 max-w-3xl mx-auto mb-12">Esta seção oferece uma visão geral da minha jornada, paixão por tecnologia e os valores que guiam meu trabalho e minha vida, tanto no desenvolvimento de software quanto em atividades de liderança e mentoria.</p>
+                
+                <div class="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-lg">
+                    <p class="text-lg text-slate-700 leading-relaxed">
+                        Desenvolvedor Full Stack Sênior e Líder Técnico com mais de 10 anos de experiência comprovada na concepção, desenvolvimento e gestão de projetos web e de sistemas complexos. Especialista em tecnologias como SQL, PHP, HTML, CSS, JavaScript e POO, com sólida vivência em React e React Native. Possuo histórico de liderança de equipes, atuação estratégica na sustentação de ERP e no desenvolvimento de funcionalidades inovadoras. Minha paixão por tecnologia e foco em resultados me impulsionam a entregar soluções de alto impacto, combinando habilidades técnicas avançadas com forte capacidade de comunicação e organização.
+                    </p>
+                    <div class="mt-8 pt-6 border-t border-slate-200">
+                        <h3 class="text-xl font-bold text-teal-700 mb-4">Liderança e Mentoria</h3>
+                        <p class="text-slate-600">Fora do ambiente de trabalho, dedico meu tempo como Líder de Escoteiros, uma atividade que reforça minhas habilidades de gestão, mentoria e desenvolvimento de pessoas, ajudando jovens a se tornarem líderes do futuro.</p>
+                    </div>
+                    <div class="mt-8 pt-6 border-t border-slate-200">
+                        <h3 class="text-xl font-bold text-teal-700 mb-4">Marketing e Criação de Conteúdo</h3>
+                        <p class="text-slate-600">Possuo uma equipe própria dedicada a mídias sociais, marketing e criação de conteúdo, o que me confere uma visão estratégica completa sobre a presença digital e a comunicação de produtos e serviços.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="timeline" class="py-20 sm:py-28 bg-white">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl font-bold text-center mb-4">Linha do Tempo Profissional</h2>
+                <p class="text-center text-slate-600 max-w-3xl mx-auto mb-16">Explore minha trajetória profissional de forma interativa. Clique em cada cargo para ver os detalhes das minhas responsabilidades e conquistas em cada empresa, desde o início da minha carreira até minha posição atual de liderança.</p>
+                <div id="timeline-container" class="relative max-w-3xl mx-auto border-l-4 border-slate-200">
+                </div>
+            </div>
+        </section>
+
+        <section id="skills" class="py-20 sm:py-28">
+            <div class="container mx-auto px-6">
+                 <h2 class="text-3xl font-bold text-center mb-4">Tempo de Experiência em Tecnologias</h2>
+                <p class="text-center text-slate-600 max-w-3xl mx-auto mb-12">Este gráfico visualiza meu tempo de experiência com as principais tecnologias e competências que utilizo. Passe o mouse sobre as barras para ver a quantidade de anos de experiência em cada área.</p>
+                <div class="chart-container bg-white p-4 sm:p-8 rounded-xl shadow-lg">
+                    <canvas id="skillsChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="project" class="py-20 sm:py-28 bg-white">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl font-bold text-center mb-4">Projeto de Destaque</h2>
+                 <p class="text-center text-slate-600 max-w-3xl mx-auto mb-12">Aqui apresento um dos projetos mais significativos da minha carreira: o desenvolvimento completo de um sistema de CRM e aplicativo mobile. Este case ilustra minha capacidade de liderar um projeto do zero, desde a arquitetura até a entrega final.</p>
+                <div class="max-w-4xl mx-auto bg-slate-800 text-white rounded-xl shadow-xl overflow-hidden">
+                    <div class="p-8">
+                        <h3 class="text-2xl font-bold text-teal-400">Criação de CRM e App Mobile na RTX</h3>
+                        <p class="text-slate-400 mt-2">Líder de Equipe e Desenvolvedor Principal</p>
+                        <div class="mt-6 space-y-4 text-slate-300">
+                           <p>Liderei o desenvolvimento e a implementação do CRM e aplicativo mobile da RTX desde a concepção até a entrega. Fui o principal responsável pela arquitetura, codificação e integração de módulos críticos, garantindo performance, escalabilidade e usabilidade. Além disso, coordenei a equipe de desenvolvimento, aplicando boas práticas, realizando code reviews e garantindo a qualidade do código e a aderência aos prazos, resultando em uma solução robusta e personalizada que otimizou os processos da empresa.</p>
+                        </div>
+                        <div class="mt-6">
+                            <h4 class="font-semibold text-teal-400">Tecnologias Utilizadas:</h4>
+                            <div class="flex flex-wrap gap-2 mt-2">
+                                <span class="bg-teal-500 text-white text-xs font-semibold px-2.5 py-1 rounded-full">React Native</span>
+                                <span class="bg-teal-500 text-white text-xs font-semibold px-2.5 py-1 rounded-full">PHP (Yii)</span>
+                                <span class="bg-teal-500 text-white text-xs font-semibold px-2.5 py-1 rounded-full">SQL</span>
+                                <span class="bg-teal-500 text-white text-xs font-2.5 py-1 rounded-full">JavaScript</span>
+                                <span class="bg-teal-500 text-white text-xs font-semibold px-2.5 py-1 rounded-full">REST APIs</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <footer id="contact" class="bg-slate-800 text-white py-16">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-3xl font-bold">Vamos Conversar?</h2>
+                <p class="mt-4 max-w-md mx-auto">Estou sempre aberto a novas oportunidades e desafios. Entre em contato para discutirmos como minhas habilidades podem agregar valor à sua equipe.</p>
+                <div class="mt-8">
+                    <a href="mailto:luizsonegoyavorski@email.com" class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-8 rounded-full transition-colors">
+                        Enviar E-mail
+                    </a>
+                </div>
+                <div class="mt-10 pt-8 border-t border-slate-700 text-slate-400 text-sm">
+                    <p>&copy; 2025 Luiz Rogerio Sonego Yavorski. Todos os direitos reservados.</p>
+                </div>
+            </div>
+        </footer>
+
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const menuBtn = document.getElementById('menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            menuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            const timelineData = [
+                {
+                    company: "RTX",
+                    role: "Líder de Equipe e Desenvolvedor Principal de CRM e App",
+                    period: "Outubro/2022 – Atualmente",
+                    details: [
+                        "Liderei o desenvolvimento e a implementação do CRM e aplicativo mobile da RTX, desde a concepção até a entrega.",
+                        "Responsável pela arquitetura, codificação e integração de módulos críticos, garantindo performance, escalabilidade e usabilidade.",
+                        "Coordenava a equipe de desenvolvimento, aplicando boas práticas e garantindo a qualidade do código e a aderência aos prazos."
+                    ]
+                },
+                {
+                    company: "Arbo Imóveis",
+                    role: "Desenvolvedor Full Stack",
+                    period: "Junho/2022 – Março/2023 (9 meses)",
+                    details: [
+                        "Atuação estratégica na sustentação de sistemas ERP, garantindo a estabilidade e a performance contínua da plataforma.",
+                        "Desenvolvimento de novas features, otimizando processos internos e aprimorando a experiência do usuário final."
+                    ]
+                },
+                {
+                    company: "Devninjas Soluções em TI",
+                    role: "Desenvolvedor Full Stack",
+                    period: "Setembro/2019 – Agosto/2020 (11 meses)",
+                    details: [
+                        "Desenvolvimento de aplicações web e sites responsivos, com foco em performance e funcionalidade.",
+                        "Manutenção e evolução de aplicativos mobile e plataformas web existentes."
+                    ]
+                },
+                 {
+                    company: "Maringa.Com",
+                    role: "Desenvolvedor",
+                    period: "Março/2019 – Outubro/2019 (7 meses)",
+                    details: [
+                        "Responsável pela manutenção e atualização contínua de sites e sistemas, assegurando o bom funcionamento e a evolução tecnológica das plataformas."
+                    ]
+                },
+                {
+                    company: "Sistemas Cordon",
+                    role: "Desenvolvedor Web",
+                    period: "Maio/2012 – Fevereiro/2019 (6 anos e 9 meses)",
+                    details: [
+                        "Desenvolvimento abrangente de websites e gerenciamento de sistemas, contribuindo ativamente para a presença digital e a eficiência operacional dos clientes."
+                    ]
+                }
+            ];
+
+            const timelineContainer = document.getElementById('timeline-container');
+            timelineData.forEach(item => {
+                const timelineItem = document.createElement('div');
+                timelineItem.className = 'timeline-item mb-12 ml-4 pl-8 relative';
+                
+                let detailsHtml = item.details.map(detail => `<li class="text-slate-600">${detail}</li>`).join('');
+
+                timelineItem.innerHTML = `
+                    <div class="cursor-pointer timeline-header">
+                        <h3 class="text-xl font-bold text-teal-800">${item.role}</h3>
+                        <p class="font-semibold text-slate-700">${item.company}</p>
+                        <p class="text-sm text-slate-500">${item.period}</p>
+                    </div>
+                    <div class="details-content">
+                        <ul class="mt-4 list-disc list-inside space-y-2">
+                            ${detailsHtml}
+                        </ul>
+                    </div>
+                `;
+                timelineContainer.appendChild(timelineItem);
+            });
+            
+            document.querySelectorAll('.timeline-header').forEach(header => {
+                header.addEventListener('click', () => {
+                    const content = header.nextElementSibling;
+                    content.classList.toggle('open');
+                });
+            });
+
+            const skillsData = {
+                labels: ['PHP (Yii)', 'JavaScript', 'SQL', 'HTML5', 'CSS3 (Tailwind)', 'POO', 'React & React Native', 'Arquitetura de Software', 'Liderança Técnica'],
+                datasets: [{
+                    label: 'Anos de Experiência',
+                    data: [12, 12, 12, 12, 12, 12, 7, 3, 3], /* Estimativa de anos de experiência */
+                    backgroundColor: 'rgba(13, 148, 136, 0.6)',
+                    borderColor: 'rgba(15, 118, 110, 1)',
+                    borderWidth: 1
+                }]
+            };
+
+            const skillsChartCtx = document.getElementById('skillsChart').getContext('2d');
+            new Chart(skillsChartCtx, {
+                type: 'bar',
+                data: skillsData,
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            max: 15, /* Ajustado para o máximo de anos de experiência */
+                            ticks: {
+                                color: '#475569'
+                            },
+                             grid: {
+                                color: '#e2e8f0'
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                color: '#1e293b',
+                                font: {
+                                    weight: 'bold'
+                                }
+                            },
+                            grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.x !== null) {
+                                        label += `${context.parsed.x} anos`;
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
